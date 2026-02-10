@@ -21,6 +21,6 @@ def _lu_inv_inplace(lu_inv: np.ndarray):
     a00 = lu_inv[0, 0]
     l0 = lu_inv[1:, 0]
     u0 = lu_inv[0, 1:]
-    lu_inv[0, 0] = 1.0 / a00 + 1.0 / a00 / a00 * (u0 @ z @ l0)
-    lu_inv[1:, 0] = -1.0 / a00 * (z @ l0)
+    lu_inv[0, 0] = 1.0 / a00 + 1.0 / a00 * (u0 @ z @ l0)
+    lu_inv[1:, 0] = -1.0 * (z @ l0)
     lu_inv[0, 1:] = -1.0 / a00 * (u0 @ z)
