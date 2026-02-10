@@ -1,0 +1,42 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "selective-sparse-inverse"
+version = "0.1.0"
+description = "A Python package for selective sparse matrix inversion"
+readme = "README.md"
+license = {text = "BSD-3-Clause"}
+authors = [
+    {name = "Tony Xiang", email = "19280867+TonyXiang8787@users.noreply.github.com"}
+]
+keywords = ["sparse", "matrix", "inverse"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: BSD License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.14",
+]
+requires-python = ">=3.14"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "ruff>=0.3.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/TonyXiang8787/selective-sparse-inverse"
+Repository = "https://github.com/TonyXiang8787/selective-sparse-inverse.git"
+Issues = "https://github.com/TonyXiang8787/selective-sparse-inverse/issues"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py314"
