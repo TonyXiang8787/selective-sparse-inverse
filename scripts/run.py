@@ -16,6 +16,7 @@ def main():
     lu_inv_scipy = sclin.inv(A)
     max_diff = np.max(np.abs(lu_inv - lu_inv_scipy))
     print(f"Max absolute difference between lu_inv and scipy inv: {max_diff:.6e}")
+    print(lu_inv @ A)
 
 
 if __name__ == "__main__":
