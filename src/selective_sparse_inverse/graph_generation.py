@@ -2,7 +2,8 @@ import networkx as nx
 import numpy as np
 import scipy.sparse as sp
 
-EDGE_WEIGHT = 5.0
+EDGE_WEIGHT_MIN = 1.0
+EDGE_WEIGHT_MAX = 5.0
 SOURCE_WEIGHT = 10e3
 
 
@@ -32,10 +33,11 @@ def build_matrix_from_edges(edges, n):
 
     # Vectorized updates: count degree of each node and accumulate edge weights
     i_nodes, j_nodes = edges[:, 0], edges[:, 1]
-    np.add.at(A, (i_nodes, i_nodes), EDGE_WEIGHT)
-    np.add.at(A, (j_nodes, j_nodes), EDGE_WEIGHT)
-    np.add.at(A, (i_nodes, j_nodes), -EDGE_WEIGHT)
-    np.add.at(A, (j_nodes, i_nodes), -EDGE_WEIGHT)
+    edge_weight = np.random.uniform(EDGE_WEIGHT_MIN, EDGE_WEIGHT_MAX, size=len(edges))
+    np.add.at(A, (i_nodes, i_nodes), edge_weight)
+    np.add.at(A, (j_nodes, j_nodes), edge_weight)
+    np.add.at(A, (i_nodes, j_nodes), -edge_weight)
+    np.add.at(A, (j_nodes, i_nodes), -edge_weight)
 
     A[-1, -1] += SOURCE_WEIGHT  # Add large value to last node to make it well-conditioned
 
