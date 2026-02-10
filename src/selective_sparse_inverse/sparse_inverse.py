@@ -19,18 +19,25 @@ def _lu_inv_sparse(lu: np.ndarray, inv: np.ndarray, sparsity_pattern: sp.csr_arr
             # Base case: invert single element
             inv[offset, offset] = 1.0 / lu[offset, offset]
         else:
-            # Get reduced sparsity pattern and matrices for this iteration
-            sp_reduced = sparsity_pattern[offset:, offset:]
+            # Create views for dense matrices (cheap operation)
             lu_reduced = lu[offset:, offset:]
             inv_reduced = inv[offset:, offset:]
 
-            # Extract non-zero indices from first row of reduced pattern
-            non_zero_indices = sp_reduced.indices[sp_reduced.indptr[0] : sp_reduced.indptr[1]]
-            assert non_zero_indices[0] == 0
-            non_zero_indices = non_zero_indices[1:]
+            # Extract non-zero indices from row `offset` of original pattern, filtered to >= offset
+            row_start = sparsity_pattern.indptr[offset]
+            row_end = sparsity_pattern.indptr[offset + 1]
+            all_col_indices = sparsity_pattern.indices[row_start:row_end]
 
-            for row in non_zero_indices:
-                col_indices = sp_reduced.indices[sp_reduced.indptr[row] : sp_reduced.indptr[row + 1]]
+            # Filter to columns > offset and adjust by offset
+            non_zero_indices = all_col_indices[all_col_indices > offset] - offset
+
+            for row_idx in non_zero_indices:
+                # Check that these row indices have all the required columns
+                row_orig = offset + row_idx
+                row_start_col = sparsity_pattern.indptr[row_orig]
+                row_end_col = sparsity_pattern.indptr[row_orig + 1]
+                col_indices = sparsity_pattern.indices[row_start_col:row_end_col]
+                col_indices = col_indices[col_indices > offset] - offset
                 assert np.all(np.isin(non_zero_indices, col_indices))
 
             # Calculate current pivot using already-inverted submatrix
