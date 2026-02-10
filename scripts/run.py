@@ -1,11 +1,11 @@
-from selective_sparse_inverse.graph_generation import random_tree_reverse_dfs_edges
+from selective_sparse_inverse.graph_generation import produce_random_tree_matrix
 
 
 def main():
-    n = 10
-    edges = random_tree_reverse_dfs_edges(n, seed=42)
-    print(edges)
-    print(edges.shape)  # Should be (n-1, 2)
+    n = 5
+    A = produce_random_tree_matrix(n, seed=42)
+    print(A)
+    print(A.shape)  # Should be (n, n)
 
 
 if __name__ == "__main__":
