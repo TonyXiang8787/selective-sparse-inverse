@@ -13,7 +13,7 @@ def main():
     lu_inv = lu_inv_full(lu)
     lu_inv_scipy = sclin.inv(A)
     max_diff = np.max(np.abs(lu_inv - lu_inv_scipy))
-    print(f"Matris size: {n}x{n}")
+    print(f"Matrix size: {n}x{n}")
     print(f"Max absolute difference between lu_inv and scipy inv: {max_diff:.6e}")
 
 
