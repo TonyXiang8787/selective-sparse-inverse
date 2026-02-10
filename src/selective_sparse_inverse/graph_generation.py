@@ -1,5 +1,6 @@
 import networkx as nx
 import numpy as np
+import scipy.sparse as sp
 
 EDGE_WEIGHT = 5.0
 SOURCE_WEIGHT = 10e3
@@ -38,7 +39,16 @@ def build_matrix_from_edges(edges, n):
 
     A[-1, -1] += SOURCE_WEIGHT  # Add large value to last node to make it well-conditioned
 
-    return A
+    # build sparse matrix with one as non-zeros
+    row_indices = np.r_[i_nodes, j_nodes, np.arange(n)]
+    col_indices = np.r_[j_nodes, i_nodes, np.arange(n)]
+    data = np.ones(len(row_indices), dtype=np.int32)
+    A_sparse = sp.csr_array((data, (row_indices, col_indices)), shape=(n, n))
+    A_sparse.sum_duplicates()
+    A_sparse.sort_indices()
+    A_sparse.data[:] = 1
+
+    return A, A_sparse
 
 
 def produce_random_tree_matrix(n, seed=None):
@@ -46,5 +56,5 @@ def produce_random_tree_matrix(n, seed=None):
     Generate a random tree and return its adjacency matrix.
     """
     edges = random_tree_reverse_dfs_edges(n, seed=seed)
-    A = build_matrix_from_edges(edges, n)
-    return A
+    A, A_sparse = build_matrix_from_edges(edges, n)
+    return A, A_sparse

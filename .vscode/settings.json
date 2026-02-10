@@ -4,11 +4,7 @@
   "python.testing.unittestEnabled": false,
   "[python]": {
     "editor.defaultFormatter": "charliermarsh.ruff",
-    "editor.formatOnSave": true,
-    "editor.codeActionsOnSave": {
-      "source.fixAll.ruff": "explicit",
-      "source.organizeImports.ruff": "explicit"
-    }
+    "editor.formatOnSave": false
   },
   "ruff.path": [],
   "ruff.importStrategy": "fromEnvironment"
