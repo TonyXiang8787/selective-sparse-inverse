@@ -9,19 +9,23 @@ def lu_inv_full(lu: np.ndarray):
 
 def _lu_inv_inplace(lu_inv: np.ndarray):
     n = lu_inv.shape[0]
-    if n == 1:
-        lu_inv[0, 0] = 1.0 / lu_inv[0, 0]
-        return
 
-    #  recursive call
-    z = lu_inv[1:, 1:]
-    _lu_inv_inplace(z)
+    # Process blocks from size 1 to n, starting from bottom-right
+    for k in range(1, n + 1):
+        i = n - k  # Starting row/column for current block
 
-    # calculate current pivot
-    a00 = lu_inv[0, 0]
-    l0 = lu_inv[1:, 0]
-    u0 = lu_inv[0, 1:]
-    u0 /= a00
-    lu_inv[0, 0] = 1.0 / a00 + (u0 @ z @ l0)
-    lu_inv[1:, 0] = -(z @ l0)
-    lu_inv[0, 1:] = -(u0 @ z)
+        if k == 1:
+            # Base case: invert single element
+            lu_inv[i, i] = 1.0 / lu_inv[i, i]
+        else:
+            # Get submatrix z (already inverted from previous iteration)
+            z = lu_inv[i + 1 :, i + 1 :]
+
+            # Calculate current pivot
+            a00 = lu_inv[i, i]
+            l0 = lu_inv[i + 1 :, i]
+            u0 = lu_inv[i, i + 1 :]
+            u0 /= a00
+            lu_inv[i, i] = 1.0 / a00 + (u0 @ z @ l0)
+            lu_inv[i + 1 :, i] = -(z @ l0)
+            lu_inv[i, i + 1 :] = -(u0 @ z)
