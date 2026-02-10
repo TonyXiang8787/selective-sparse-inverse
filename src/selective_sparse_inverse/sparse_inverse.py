@@ -17,6 +17,10 @@ def _lu_inv_sparse(lu: np.ndarray, inv: np.ndarray, sparsity_pattern: sp.csr_arr
     assert non_zero_indices[0] == 0
     non_zero_indices = non_zero_indices[1:]
 
+    for row in non_zero_indices:
+        col_indices = sparsity_pattern.indices[sparsity_pattern.indptr[row] : sparsity_pattern.indptr[row + 1]]
+        assert np.all(np.isin(non_zero_indices, col_indices))
+
     #  recursive call
     sparsity_pattern_next = sparsity_pattern[1:, 1:]
     _lu_inv_sparse(lu[1:, 1:], inv[1:, 1:], sparsity_pattern_next)

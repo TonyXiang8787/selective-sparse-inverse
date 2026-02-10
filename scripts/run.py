@@ -8,7 +8,7 @@ from selective_sparse_inverse.lu_decomposition import lu_no_pivot
 
 
 def main():
-    n = 5
+    n = 100
     A, A_sparse = produce_random_tree_matrix(n)
     lu = lu_no_pivot(A)
     inv = lu_inv_full(lu)
@@ -22,7 +22,6 @@ def main():
     inv_sparse = lu_inv_sparse(lu, A_sparse)
     max_diff_sparse = np.nanmax(np.abs(inv_sparse - inv_scipy))
     print(f"Max absolute difference between sparse lu_inv and scipy inv: {max_diff_sparse:.6e}")
-    print(inv_sparse)
 
 
 if __name__ == "__main__":
