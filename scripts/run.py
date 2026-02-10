@@ -8,7 +8,7 @@ from selective_sparse_inverse.lu_decomposition import lu_no_pivot
 
 
 def main():
-    n = 100
+    n = 1000
     A, A_sparse = produce_random_tree_matrix(n)
     lu = lu_no_pivot(A)
     inv = lu_inv_full(lu)
