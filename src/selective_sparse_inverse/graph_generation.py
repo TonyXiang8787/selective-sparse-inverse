@@ -25,7 +25,17 @@ def random_tree_reverse_dfs_edges(n, seed=None):
     return edges
 
 
-def build_matrix_from_edges(edges, n):
+def cycle_edges(n):
+    edges = np.zeros((n, 2), dtype=np.int32)
+    edges[:, 0] = np.arange(n)
+    edges[:, 1] = np.arange(1, n + 1) % n
+    fill_ins = np.zeros((n - 3, 2), dtype=np.int32)
+    fill_ins[:, 0] = n - 1
+    fill_ins[:, 1] = np.arange(1, n - 2)
+    return edges, fill_ins
+
+
+def build_matrix_from_edges(edges, n, fill_ins=None):
     """
     Build an (n,n) adjacency matrix from an (n-1,2) array of edges.
     """
@@ -42,6 +52,11 @@ def build_matrix_from_edges(edges, n):
     A[-1, -1] += SOURCE_WEIGHT  # Add large value to last node to make it well-conditioned
 
     # build sparse matrix with one as non-zeros
+    if fill_ins is not None:
+        full_edges = np.concatenate([edges, fill_ins], axis=0)
+    else:
+        full_edges = edges
+    i_nodes, j_nodes = full_edges[:, 0], full_edges[:, 1]
     row_indices = np.r_[i_nodes, j_nodes, np.arange(n)]
     col_indices = np.r_[j_nodes, i_nodes, np.arange(n)]
     data = np.ones(len(row_indices), dtype=np.int32)
@@ -59,4 +74,10 @@ def produce_random_tree_matrix(n, seed=None):
     """
     edges = random_tree_reverse_dfs_edges(n, seed=seed)
     A, A_sparse = build_matrix_from_edges(edges, n)
+    return A, A_sparse
+
+
+def produce_cycle_matrix(n):
+    edges, fill_ins = cycle_edges(n)
+    A, A_sparse = build_matrix_from_edges(edges, n, fill_ins=fill_ins)
     return A, A_sparse
